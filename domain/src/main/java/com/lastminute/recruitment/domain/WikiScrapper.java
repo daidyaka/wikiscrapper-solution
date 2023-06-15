@@ -1,7 +1,12 @@
 package com.lastminute.recruitment.domain;
 
+import com.lastminute.recruitment.domain.error.WikiPageInvalidFormat;
+import com.lastminute.recruitment.domain.error.WikiPageNotFound;
 import com.lastminute.recruitment.domain.error.WikiPageRepository;
 import com.lastminute.recruitment.domain.error.WikiReader;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class WikiScrapper {
 
@@ -13,9 +18,34 @@ public class WikiScrapper {
         this.repository = repository;
     }
 
-
     public void read(String link) {
+        WikiPage rootPage = wikiReader.read(link);
+        repository.save(rootPage);
 
+        ArrayList<String> visitedPages = new ArrayList<>();
+        visitedPages.add(rootPage.getSelfLink());
+
+        traverseAndSave(rootPage, visitedPages);
+    }
+
+    private void traverseAndSave(WikiPage page, List<String> visitedPages) {
+        for (String childLink : page.getLinks()) {
+            if (visitedPages.contains(childLink)) {
+                continue;
+            }
+
+            WikiPage readPage;
+            try {
+                readPage = wikiReader.read(childLink);
+            } catch (WikiPageNotFound | WikiPageInvalidFormat exception) {
+                continue;
+            }
+
+            repository.save(readPage);
+            visitedPages.add(readPage.getSelfLink());
+
+            traverseAndSave(readPage, visitedPages);
+        }
     }
 
 }
