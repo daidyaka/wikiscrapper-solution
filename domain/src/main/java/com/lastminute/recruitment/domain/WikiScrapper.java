@@ -19,6 +19,10 @@ public class WikiScrapper {
     }
 
     public void read(String link) {
+        if (link == null || link.isEmpty()) {
+            return;
+        }
+
         WikiPage rootPage = wikiReader.read(link);
         repository.save(rootPage);
 
