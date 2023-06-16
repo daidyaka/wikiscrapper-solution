@@ -1,6 +1,5 @@
 package com.lastminute.recruitment.domain;
 
-import com.lastminute.recruitment.domain.error.WikiPageInvalidFormat;
 import com.lastminute.recruitment.domain.error.WikiPageNotFound;
 import com.lastminute.recruitment.domain.error.WikiPageRepository;
 import com.lastminute.recruitment.domain.error.WikiReader;
@@ -41,7 +40,7 @@ public class WikiScrapper {
             WikiPage readPage;
             try {
                 readPage = wikiReader.read(childLink);
-            } catch (WikiPageNotFound | WikiPageInvalidFormat exception) {
+            } catch (WikiPageNotFound exception) {
                 continue;
             }
 

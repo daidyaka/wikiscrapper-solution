@@ -1,7 +1,6 @@
 package com.lastminute.recruitment.rest;
 
 import com.lastminute.recruitment.domain.WikiScrapper;
-import com.lastminute.recruitment.domain.error.WikiPageInvalidFormat;
 import com.lastminute.recruitment.domain.error.WikiPageNotFound;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -25,8 +24,6 @@ public class WikiScrapperResource {
             wikiScrapper.read(link);
         } catch (WikiPageNotFound pageNotFound) {
             return ResponseEntity.notFound().build();
-        } catch (WikiPageInvalidFormat invalidFormat) {
-            return ResponseEntity.badRequest().build();
         }
 
         return ResponseEntity.ok().build();

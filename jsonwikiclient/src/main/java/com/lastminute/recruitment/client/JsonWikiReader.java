@@ -1,27 +1,27 @@
 package com.lastminute.recruitment.client;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.Gson;
 import com.lastminute.recruitment.domain.WikiPage;
-import com.lastminute.recruitment.domain.error.WikiPageInvalidFormat;
+import com.lastminute.recruitment.domain.error.WikiPageNotFound;
 import com.lastminute.recruitment.domain.error.WikiReader;
 
 import java.io.File;
+import java.io.IOException;
 import java.nio.file.Files;
 
 public class JsonWikiReader implements WikiReader {
 
     private static final JsonWikiClient CLIENT = new JsonWikiClient();
-    private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
+    private static final Gson JSON_PARSER = new Gson();
 
     @Override
     public WikiPage read(String link) {
-        String filePath = CLIENT.readJson(link);
-
         try {
+            String filePath = CLIENT.readJson(link);
             String jsonContent = Files.readString(new File(filePath).toPath());
-            return OBJECT_MAPPER.readValue(jsonContent, WikiPage.class);
-        } catch (Exception exception) {
-            throw new WikiPageInvalidFormat();
+            return JSON_PARSER.fromJson(jsonContent, WikiPage.class);
+        } catch (Exception resourceNullException) {
+            throw new WikiPageNotFound();
         }
     }
 }

@@ -1,0 +1,8 @@
+{
+  "title": "Site 2",
+  "content": "Content 2",
+  "selfLink": "http://wikiscrapper.test/json/test-page3",
+  "links": [
+    "http://wikiscrapper.test/json/test-page2"
+  ]
+}
